@@ -66,16 +66,17 @@ private extension RemoteFeedLoaderTests {
     }
     
     class HTTPCLientSpy: HTTPClient {
-        var requestedURLs: [URL] = []
-        var completions: [(Error) -> ()] = []
+        var requestedURLs: [URL] {
+            messages.map(\.url)
+        }
+        var messages: [(url: URL, completion: (Error) -> ())] = []
         
         func get(from url: URL, completion: @escaping (Error) -> ()) {
-            self.completions.append(completion)
-            self.requestedURLs.append(url)
+            self.messages.append((url, completion))
         }
         
         func complete(with error: Error, at index: Int) {
-            completions[index](error)
+            messages[index].completion(error)
         }
     }
 
