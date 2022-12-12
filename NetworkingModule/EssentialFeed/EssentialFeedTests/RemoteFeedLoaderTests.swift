@@ -72,13 +72,13 @@ class RemoteFeedLoaderTests: XCTestCase {
 }
 
 private extension RemoteFeedLoaderTests {
-    func _makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteFeedLoader, client: HTTPCLientSpy) {
-        let client = HTTPCLientSpy()
+    func _makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
+        let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(client: client, url: url)
         return (sut, client)
     }
     
-    class HTTPCLientSpy: HTTPClient {
+    class HTTPClientSpy: HTTPClient {
         var requestedURLs: [URL] {
             messages.map(\.url)
         }
