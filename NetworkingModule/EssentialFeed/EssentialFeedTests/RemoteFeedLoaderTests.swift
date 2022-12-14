@@ -48,7 +48,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = _makeSUT()
               
         // When
-        expect(sut, toCompleteWithError: .connectivity) {
+        expect(sut, toCompleteWithResult: .failure(.connectivity)) {
             let clientError = NSError(domain: "test", code: 0)
             client.complete(with: clientError, at: 0)
         }
@@ -61,7 +61,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         // When
         let samples = [199, 201, 300, 400, 500]
         samples.enumerated().forEach { index, code in
-            expect(sut, toCompleteWithError: .invalidData) {
+            expect(sut, toCompleteWithResult: .failure(.invalidData)) {
                 client.complete(withStatusCode: code, at: index)
             }
         }
@@ -73,7 +73,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = _makeSUT()
               
         // When
-        expect(sut, toCompleteWithError: .invalidData) {
+        expect(sut, toCompleteWithResult: .failure(.invalidData)) {
             let invalidJSON = "Invalid json".data(using: .utf8)!
             client.complete(withStatusCode: 200, data: invalidJSON)
         }
@@ -87,11 +87,11 @@ private extension RemoteFeedLoaderTests {
         return (sut, client)
     }
     
-    func expect(_ sut: RemoteFeedLoader, toCompleteWithError error: RemoteFeedLoader.Error, action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
-        var capturedError: [RemoteFeedLoader.Error] = []
-        sut.load { capturedError.append($0) }
+    func expect(_ sut: RemoteFeedLoader, toCompleteWithResult result: RemoteFeedLoader.Result, action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        var capturedResult: [RemoteFeedLoader.Result] = []
+        sut.load { capturedResult.append($0) }
         action()
-        XCTAssertEqual(capturedError, [error], file: file, line: line)
+        XCTAssertEqual(capturedResult, [result], file: file, line: line)
     }
     
     class HTTPClientSpy: HTTPClient {
