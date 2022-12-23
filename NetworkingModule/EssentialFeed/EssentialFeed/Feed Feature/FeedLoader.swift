@@ -12,8 +12,6 @@ public enum FeedLoaderResult<Error: Swift.Error> {
     case failure(Error)
 }
 
-extension FeedLoaderResult: Equatable where Error: Equatable {}
-
 protocol FeedLoader {
     associatedtype Error: Swift.Error
     func load(completion: @escaping (FeedLoaderResult<Error>) -> Void)
