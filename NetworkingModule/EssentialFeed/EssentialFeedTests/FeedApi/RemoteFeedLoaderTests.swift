@@ -48,7 +48,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = _makeSUT()
               
         // When
-        expect(sut, toCompleteWithResult: .failure(.connectivity)) {
+        expect(sut, toCompleteWithResult: .failure(RemoteFeedLoader.Error.connectivity)) {
             let clientError = NSError(domain: "test", code: 0)
             client.complete(with: clientError, at: 0)
         }
@@ -61,7 +61,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         // When
         let samples = [199, 201, 300, 400, 500]
         samples.enumerated().forEach { index, code in
-            expect(sut, toCompleteWithResult: .failure(.invalidData)) {
+            expect(sut, toCompleteWithResult: .failure(RemoteFeedLoader.Error.invalidData)) {
                 let json = makeItemsJSON([])
                 client.complete(withStatusCode: code, data: json, at: index)
             }
@@ -74,7 +74,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = _makeSUT()
               
         // When
-        expect(sut, toCompleteWithResult: .failure(.invalidData)) {
+        expect(sut, toCompleteWithResult: .failure(RemoteFeedLoader.Error.invalidData)) {
             let invalidJSON = "Invalid json".data(using: .utf8)!
             client.complete(withStatusCode: 200, data: invalidJSON)
         }
@@ -149,7 +149,7 @@ private extension RemoteFeedLoaderTests {
             switch (receivedResult, expectedResult) {
             case let (.success(receivedItems), .success(expectedItems)):
                 XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
-            case let (.failure(receivedError), .failure(expectedError)):
+            case let (.failure(receivedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
                 XCTAssertEqual(receivedError, expectedError, file: file, line: line)
             default:
                 XCTFail("Not equal \(receivedResult) with expected \(expectedResult)", file: file, line: line)
