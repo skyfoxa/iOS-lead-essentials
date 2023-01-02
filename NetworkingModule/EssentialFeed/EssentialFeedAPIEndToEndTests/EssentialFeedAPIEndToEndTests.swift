@@ -33,6 +33,8 @@ private extension EssentialFeedAPIEndToEndTests {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient()
         let loader = RemoteFeedLoader(client: client, url: testServerURL)
+        traceForMemoryLeaks(client)
+        traceForMemoryLeaks(loader)
         
         // When
         let exp = expectation(description: "When feed loaded")
