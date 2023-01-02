@@ -11,6 +11,24 @@ import EssentialFeed
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
 
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() throws {
+        switch getFeedResult() {
+        case let .success(items):
+            XCTAssertEqual(items.count, 8, "Expected 8 testing items in the feed")
+            
+            items.enumerated().forEach { (index, item) in
+                XCTAssertEqual(item, expectedItem(at: index), "Unexpected item values at index \(index)")
+            }
+        case let .failure(error):
+            XCTFail("Expected successfull state but got \(error)")
+        default:
+            XCTFail("Expected successfull feed result, got nil result instead")
+        }
+    }
+}
+
+private extension EssentialFeedAPIEndToEndTests {
+    
+    func getFeedResult() -> FeedLoaderResult? {
         // Given
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient()
@@ -28,22 +46,9 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         // Assert
         waitForExpectations(timeout: 5.0)
         
-        switch receivedResult {
-        case let .success(items):
-            XCTAssertEqual(items.count, 8, "Expected 8 testing items in the feed")
-            
-            items.enumerated().forEach { (index, item) in
-                XCTAssertEqual(item, expectedItem(at: index), "Unexpected item values at index \(index)")
-            }
-        case let .failure(error):
-            XCTFail("Expected successfull state but got \(error)")
-        default:
-            XCTFail("Expected successfull feed result, got nil result instead")
-        }
+        return receivedResult
     }
-}
-
-private extension EssentialFeedAPIEndToEndTests {
+    
     func expectedItem(at index: Int) -> FeedItem {
         FeedItem(id: expectedID(at: index),
                  description: expectedDescription(at: index),
