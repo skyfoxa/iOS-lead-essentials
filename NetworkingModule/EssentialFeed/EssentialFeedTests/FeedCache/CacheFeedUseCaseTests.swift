@@ -18,6 +18,13 @@ class LocalFeedLoader {
         self.currentDate = currentDate
     }
     
+    fileprivate func cache(_ items: [FeedItem], with completion: @escaping (Error?) -> Void) {
+        self.store.insertItems(items, timestamp: self.currentDate()) { [weak self] error in
+            guard self != nil else { return }
+            completion(error)
+        }
+    }
+    
     func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
         store.deleteCachedFeed { [weak self] error in
             guard let self = self else { return }
@@ -26,10 +33,7 @@ class LocalFeedLoader {
                 completion(cacheDeletionError)
             }
             else {
-                self.store.insertItems(items, timestamp: self.currentDate()) { [weak self] error in
-                    guard self != nil else { return }
-                    completion(error)
-                }
+                self.cache(items, with: completion)
             }
         }
     }
