@@ -47,11 +47,11 @@ public final class RemoteFeedLoader: FeedLoader {
 }
 
 private extension [RemoteFeedItem] {
-    func toModels() -> [FeedItem] {
+    func toModels() -> [FeedImage] {
         map { .init(id: $0.id,
                     description: $0.description,
                     location: $0.location,
-                    imageURL: $0.image)
+                    url: $0.image)
         }
     }
 }
