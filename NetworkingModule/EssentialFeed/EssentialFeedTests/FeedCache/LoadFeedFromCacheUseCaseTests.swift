@@ -8,7 +8,7 @@
 import XCTest
 import EssentialFeed
 
-final class LocalFeedFromCacheUseCaseTests: XCTestCase {
+final class LoadFeedFromCacheUseCaseTests: XCTestCase {
 
 
     func test_init() {
@@ -19,7 +19,7 @@ final class LocalFeedFromCacheUseCaseTests: XCTestCase {
 
 }
 
-private extension LocalFeedFromCacheUseCaseTests {
+private extension LoadFeedFromCacheUseCaseTests {
     func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         let store = FeedStoreSpy()
         let sut = LocalFeedLoader(store: store, currentDate: currentDate)
