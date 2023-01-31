@@ -83,10 +83,6 @@ private extension URLSessionHTTPClientTests {
         return sut
     }
     
-    func anyURL() -> URL {
-        URL(string: "https://any-url.com")!
-    }
-    
     func nonHTTPResponse() -> URLResponse {
         URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
     }
@@ -97,10 +93,6 @@ private extension URLSessionHTTPClientTests {
     
     func anyData() -> Data {
         "Any data".data(using: .utf8)!
-    }
-    
-    func anyNSError() -> NSError {
-        NSError(domain: "any error", code: 1)
     }
     
     func resultError(for data: Data?, response: URLResponse?, error: Error?, file: StaticString = #filePath, line: UInt = #line) -> Error? {
