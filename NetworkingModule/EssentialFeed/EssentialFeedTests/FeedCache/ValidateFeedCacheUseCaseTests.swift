@@ -20,7 +20,7 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         sut.validateCache()
-        store.completeRetreval(with: anyNSError())
+        store.completeRetrieval(with: anyNSError())
         
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCache])
     }
@@ -29,7 +29,7 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         sut.validateCache()
-        store.completeRetrevalWithEmptyCache()
+        store.completeRetrievalWithEmptyCache()
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -41,7 +41,7 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
         sut.validateCache()
-        store.completeRetreval(with: feed.locals, timestamp: lessThenSevenDaysTimestamp)
+        store.completeRetrieval(with: feed.locals, timestamp: lessThenSevenDaysTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -53,7 +53,7 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
         sut.validateCache()
-        store.completeRetreval(with: feed.locals, timestamp: sevenDaysTimestamp)
+        store.completeRetrieval(with: feed.locals, timestamp: sevenDaysTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCache])
     }
@@ -65,7 +65,7 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
         sut.validateCache()
-        store.completeRetreval(with: feed.locals, timestamp: moreThanSevenDaysTimestamp)
+        store.completeRetrieval(with: feed.locals, timestamp: moreThanSevenDaysTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCache])
     }
@@ -77,7 +77,7 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         sut?.validateCache()
         
         sut = nil
-        store.completeRetreval(with: anyNSError())
+        store.completeRetrieval(with: anyNSError())
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }

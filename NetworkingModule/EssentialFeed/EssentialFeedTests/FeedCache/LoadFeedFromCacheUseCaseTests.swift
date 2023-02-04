@@ -28,7 +28,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let retrievalError = anyNSError()
 
         expect(sut, toCompleteWith: .failure(retrievalError), when: {
-            store.completeRetreval(with: retrievalError)
+            store.completeRetrieval(with: retrievalError)
         })
 
     }
@@ -37,7 +37,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
 
         expect(sut, toCompleteWith: .success([]), when: {
-            store.completeRetrevalWithEmptyCache()
+            store.completeRetrievalWithEmptyCache()
         })
     }
     
@@ -48,7 +48,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         expect(sut, toCompleteWith: .success(feed.models), when: {
-            store.completeRetreval(with: feed.locals, timestamp: lessThenSevenDaysTimestamp)
+            store.completeRetrieval(with: feed.locals, timestamp: lessThenSevenDaysTimestamp)
         })
     }
     
@@ -59,7 +59,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         expect(sut, toCompleteWith: .success([]), when: {
-            store.completeRetreval(with: feed.locals, timestamp: sevenDaysTimestamp)
+            store.completeRetrieval(with: feed.locals, timestamp: sevenDaysTimestamp)
         })
     }
     
@@ -70,7 +70,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         expect(sut, toCompleteWith: .success([]), when: {
-            store.completeRetreval(with: feed.locals, timestamp: moreThanSevenDaysTimestamp)
+            store.completeRetrieval(with: feed.locals, timestamp: moreThanSevenDaysTimestamp)
         })
     }
     
@@ -78,7 +78,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         sut.load { _ in }
-        store.completeRetreval(with: anyNSError())
+        store.completeRetrieval(with: anyNSError())
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -87,7 +87,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         sut.load { _ in }
-        store.completeRetrevalWithEmptyCache()
+        store.completeRetrievalWithEmptyCache()
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -99,7 +99,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
         sut.load { _ in }
-        store.completeRetreval(with: feed.locals, timestamp: lessThenSevenDaysTimestamp)
+        store.completeRetrieval(with: feed.locals, timestamp: lessThenSevenDaysTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -111,7 +111,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
         sut.load { _ in }
-        store.completeRetreval(with: feed.locals, timestamp: sevenDaysTimestamp)
+        store.completeRetrieval(with: feed.locals, timestamp: sevenDaysTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -123,7 +123,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
         sut.load { _ in }
-        store.completeRetreval(with: feed.locals, timestamp: moreThanSevenDaysTimestamp)
+        store.completeRetrieval(with: feed.locals, timestamp: moreThanSevenDaysTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -138,7 +138,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         })
         
         sut = nil
-        store.completeRetrevalWithEmptyCache()
+        store.completeRetrievalWithEmptyCache()
         
         XCTAssertTrue(receivedResults.isEmpty)
     }
