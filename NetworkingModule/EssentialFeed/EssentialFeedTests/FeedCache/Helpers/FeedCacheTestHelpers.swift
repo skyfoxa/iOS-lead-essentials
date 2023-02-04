@@ -19,8 +19,8 @@ func uniqueImage() -> FeedImage {
     .init(id: .init(), description: "any", location: "any", url: anyURL())
 }
 
+// DSL
 extension Date {
-    
     func minusFeedCacheMaxAge() -> Date {
         adding(day: -feedCacheMaxAgeInDays)
     }
@@ -34,7 +34,9 @@ extension Date {
         
         return calendar.date(byAdding: .day, value: day, to: self)!
     }
-    
+}
+
+extension Date {
     func adding(seconds: TimeInterval) -> Date {
         self + seconds
     }
