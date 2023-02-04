@@ -140,8 +140,10 @@ final class CodableFeedStoreTests: XCTestCase {
 
 private extension CodableFeedStoreTests {
     
-    func makeSUT() -> CodableFeedStore {
-        CodableFeedStore()
+    func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
+        let sut = CodableFeedStore()
+        traceForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
     
     func testContextCacheURL() -> URL {
