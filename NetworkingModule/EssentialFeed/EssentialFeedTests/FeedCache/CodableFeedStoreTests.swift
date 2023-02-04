@@ -40,7 +40,11 @@ class CodableFeedStore {
         
     }
     
-    private let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("image-feed.store")
+    private let storeURL: URL
+    
+    init(storeURL: URL) {
+        self.storeURL = storeURL
+    }
     
     func retrieve(completion: @escaping FeedStore.RetrievalCompletion) {
         let decoder = JSONDecoder()
@@ -141,7 +145,7 @@ final class CodableFeedStoreTests: XCTestCase {
 private extension CodableFeedStoreTests {
     
     func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
-        let sut = CodableFeedStore()
+        let sut = CodableFeedStore(storeURL: testContextCacheURL())
         traceForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
