@@ -20,6 +20,11 @@ func uniqueImage() -> FeedImage {
 }
 
 extension Date {
+    
+    func minusFeedCacheMaxAge() -> Date {
+        adding(day: -7)
+    }
+    
     func adding(day: Int) -> Date {
         let calendar = Calendar(identifier: .gregorian)
         
