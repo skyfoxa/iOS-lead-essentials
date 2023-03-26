@@ -47,13 +47,17 @@ class CodableFeedStore {
     }
     
     func retrieve(completion: @escaping FeedStore.RetrievalCompletion) {
-        let decoder = JSONDecoder()
-        
         guard let data = try? Data(contentsOf: storeURL) else {
             return completion(.empty)
         }
-        let cache = try! decoder.decode(Cache.self, from: data)
-        completion(.found(feed: cache.localFeed, timestamp: cache.timestamp))
+        
+        do {
+            let decoder = JSONDecoder()
+            let cache = try decoder.decode(Cache.self, from: data)
+            completion(.found(feed: cache.localFeed, timestamp: cache.timestamp))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
     func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
@@ -112,6 +116,14 @@ final class CodableFeedStoreTests: XCTestCase {
         
         expect(sut, toRetrieveTwice: .found(feed: feed, timestamp: timestamp))
     }
+    
+    func test_retrieve_deliversFailureOnRetrievalError() {
+        let sut = makeSUT()
+        
+        try! "invalid data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+        
+        expect(sut, toRetrieve: .failure(anyNSError()))
+    }
 }
 
 private extension CodableFeedStoreTests {
@@ -167,12 +179,11 @@ private extension CodableFeedStoreTests {
 extension RetrieveCacheFeedResult: Equatable {
     public static func == (lhs: EssentialFeed.RetrieveCacheFeedResult, rhs: EssentialFeed.RetrieveCacheFeedResult) -> Bool {
         switch (lhs, rhs) {
-        case (.empty, .empty):
+        case (.empty, .empty),
+            (.failure, .failure):
             return true
         case let (.found(lhsFeed, lhsTimestamp), .found(rhsFeed, rhsTimestamp)):
             return lhsFeed == rhsFeed && lhsTimestamp == rhsTimestamp
-        case let (.failure(lhsError), .failure(rhsError)):
-            return lhsError.localizedDescription == rhsError.localizedDescription
         default:
             return false
         }
