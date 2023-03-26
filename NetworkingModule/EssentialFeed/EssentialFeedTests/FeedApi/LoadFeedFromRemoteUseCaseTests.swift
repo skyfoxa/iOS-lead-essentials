@@ -131,8 +131,8 @@ private extension LoadFeedFromRemoteUseCaseTests {
     func _makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(client: client, url: url)
-        traceForMemoryLeaks(sut, file: file, line: line)
-        traceForMemoryLeaks(client, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
     }
     
@@ -159,13 +159,13 @@ private extension LoadFeedFromRemoteUseCaseTests {
         .failure(error)
     }
     
-    func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String : Any]) {
-        let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+    func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String : Any]) {
+        let item = FeedImage(id: id, description: description, location: location, url: imageURL)
         let json = [
             "id" : item.id.uuidString,
             "description" : item.description,
             "location" : item.location,
-            "image" : item.imageURL.absoluteString
+            "image" : item.url.absoluteString
         ].reduce([String:Any]()) { acc, item in
             var newData = acc
             if let value = item.value { newData[item.key] = value }

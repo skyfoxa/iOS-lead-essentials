@@ -12,11 +12,11 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
 
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() throws {
         switch getFeedResult() {
-        case let .success(items):
-            XCTAssertEqual(items.count, 8, "Expected 8 testing items in the feed")
+        case let .success(imageFeed):
+            XCTAssertEqual(imageFeed.count, 8, "Expected 8 testing images in the image feed")
             
-            items.enumerated().forEach { (index, item) in
-                XCTAssertEqual(item, expectedItem(at: index), "Unexpected item values at index \(index)")
+            imageFeed.enumerated().forEach { (index, item) in
+                XCTAssertEqual(item, expectedImage(at: index), "Unexpected item values at index \(index)")
             }
         case let .failure(error):
             XCTFail("Expected successfull state but got \(error)")
@@ -33,8 +33,8 @@ private extension EssentialFeedAPIEndToEndTests {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient(session: .init(configuration: .ephemeral))
         let loader = RemoteFeedLoader(client: client, url: testServerURL)
-        traceForMemoryLeaks(client, file: file, line: line)
-        traceForMemoryLeaks(loader, file: file, line: line)
+        trackForMemoryLeaks(client, file: file, line: line)
+        trackForMemoryLeaks(loader, file: file, line: line)
         
         // When
         let exp = expectation(description: "When feed loaded")
@@ -51,11 +51,11 @@ private extension EssentialFeedAPIEndToEndTests {
         return receivedResult
     }
     
-    func expectedItem(at index: Int) -> FeedItem {
-        FeedItem(id: expectedID(at: index),
+    func expectedImage(at index: Int) -> FeedImage {
+        FeedImage(id: expectedID(at: index),
                  description: expectedDescription(at: index),
                  location: expectedLoaction(at: index),
-                 imageURL: expectedURL(at: index))
+                 url: expectedURL(at: index))
     }
     
     func expectedID(at index: Int) -> UUID {
