@@ -158,3 +158,17 @@ extension FeedStoreSpecs where Self: XCTestCase {
         return deletionError
     }
 }
+
+extension RetrieveCacheFeedResult: Equatable {
+    public static func == (lhs: EssentialFeed.RetrieveCacheFeedResult, rhs: EssentialFeed.RetrieveCacheFeedResult) -> Bool {
+        switch (lhs, rhs) {
+        case (.empty, .empty),
+            (.failure, .failure):
+            return true
+        case let (.found(lhsFeed, lhsTimestamp), .found(rhsFeed, rhsTimestamp)):
+            return lhsFeed == rhsFeed && lhsTimestamp == rhsTimestamp
+        default:
+            return false
+        }
+    }    
+}
