@@ -79,7 +79,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
 private extension URLSessionHTTPClientTests {
     func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient()
-        traceForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
     
