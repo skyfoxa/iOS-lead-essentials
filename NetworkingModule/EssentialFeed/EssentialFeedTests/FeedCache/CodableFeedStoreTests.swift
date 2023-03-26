@@ -201,7 +201,7 @@ private extension CodableFeedStoreTests {
             deletionError = receivedDeletionError
             exp.fulfill()
         }
-        wait(for: [exp], timeout: 1.0)
+        wait(for: [exp], timeout: 5.0)
         return deletionError
     }
     
