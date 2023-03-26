@@ -9,6 +9,18 @@ import XCTest
 import EssentialFeed
 
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
+    
+    override func setUp() {
+        super.setUp()
+
+        setupEmptyStoreState()
+    }
+
+    override func tearDown() {
+        super.tearDown()
+
+        undoStoreSideEffects()
+    }
 
     func test_load_deliversNoItemOnEmptyCache() {
         let sut = makeSUT()
@@ -46,7 +58,20 @@ private extension EssentialFeedCacheIntegrationTests {
     func testSpecificStoreURL() -> URL {
         cachesDirectory().appendingPathComponent("\(type(of: self)).store")
     }
+    
     func cachesDirectory() -> URL {
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+    }
+    
+    func setupEmptyStoreState() {
+            deleteStoreArtifacts()
+        }
+
+    func undoStoreSideEffects() {
+        deleteStoreArtifacts()
+    }
+
+    func deleteStoreArtifacts() {
+        try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
 }
